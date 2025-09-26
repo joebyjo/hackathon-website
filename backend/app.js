@@ -7,6 +7,7 @@ var logger = require('morgan');
 require('dotenv').config({ quiet: true }); 
 
 var coursesRouter = require('./routes/courses');
+var aiRouter = require('./routes/ai');
 
 var app = express();
 
@@ -26,7 +27,7 @@ app.use(express.static(
 ));
 
 app.use('/api/courses', coursesRouter);
-
+app.use('/api/ai', aiRouter);
 
 // serve all routes to react
 app.get('*', (req, res) => {
