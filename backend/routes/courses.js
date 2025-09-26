@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/courses/:id/:term?year=2025
-router.get("/:id/:term", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const courseId = req.params.id;
   const term = req.params.term;
   const year = parseInt(req.query.year, 10) || 2025;

@@ -67,7 +67,7 @@ dev:
 
 install:
 	@echo " [*] Installing root dependencies..."
-	@npm install
+# 	@npm install
 	@echo " [*] Installing frontend dependencies..."
 	@make -C $(FRONTEND_DIR) install
 	@echo " [*] Installing backend dependencies..."

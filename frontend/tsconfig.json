@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-=======
   "include": ["src/**/*", "shared/**/*", "server/**/*"],
->>>>>>> refs/remotes/origin/main
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
@@ -20,11 +16,7 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-<<<<<<< HEAD
-      "@/*": ["./client/src/*"],
-=======
       "@/*": ["src/*"],
->>>>>>> refs/remotes/origin/main
       "@shared/*": ["./shared/*"]
     }
   }

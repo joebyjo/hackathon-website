@@ -68,7 +68,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
 
     try {
       // POST to your backend API
-      const response = await axios.post(`${API}ai/prompt`, { value: inputMessage });
+      const response = await axios.post(`${API}/ai/prompt`, { value: inputMessage });
 
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
