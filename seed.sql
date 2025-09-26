@@ -1,5 +1,5 @@
 -- =======================
--- TEMPORARY USER
+-- TEMPORARY USERS
 -- =======================
 INSERT INTO Users (
     student_id,
@@ -15,29 +15,31 @@ INSERT INTO Users (
     'Temp',
     'User',
     'temp.user@example.com',
-    'hashed_password_here', -- Replace with bcrypt hash in real app
+    'hashed_password_here', -- ⚠️ Replace with bcrypt hash in production
     '1st Year',
     'Computer Science',
     'student'
 );
 
--- Capture user_id for later inserts
--- (Postgres trick: this will store the new ID into a variable)
-WITH ins AS (
-    INSERT INTO Users (
-        student_id, first_name, last_name, email, password_hash, academic_year, major, role
-    ) VALUES (
-        'S7654321',
-        'Test',
-        'Student',
-        'test.student@example.com',
-        'hashed_password_here',
-        '2nd Year',
-        'Software Engineering',
-        'student'
-    )
-    RETURNING user_id
-) SELECT user_id FROM ins;
+INSERT INTO Users (
+    student_id,
+    first_name,
+    last_name,
+    email,
+    password_hash,
+    academic_year,
+    major,
+    role
+) VALUES (
+    'S7654321',
+    'Test',
+    'Student',
+    'test.student@example.com',
+    'hashed_password_here',
+    '2nd Year',
+    'Software Engineering',
+    'student'
+);
 
 -- =======================
 -- COURSES SEED
@@ -76,7 +78,7 @@ INSERT INTO Courses (
  'COMP SCI',
  19362,
  '1',
- 3,
+ 3.00,
  0.125,
  'Up to 3 hours per week',
  '',
@@ -99,7 +101,7 @@ INSERT INTO Courses (
  'COMP SCI',
  22474,
  '1',
- 3,
+ 3.00,
  0.125,
  'Up to 10 hours per week',
  '',
@@ -122,7 +124,7 @@ INSERT INTO Courses (
  'COMP SCI',
  22812,
  '1',
- 3,
+ 3.00,
  0.125,
  'Up to 10 hours per week',
  '',
@@ -137,24 +139,23 @@ INSERT INTO Courses (
 -- =======================
 -- JUNCTION TABLE SEEDS
 -- =======================
+-- ⚠️ Assumes:
+--   - first inserted user has user_id = 1
+--   - courses inserted above have IDs = 1, 2, 3
+-- Adjust IDs if your DB auto-increment is different
 
--- Assume our first inserted user has user_id = 1
--- and the three inserted courses have course_id = 1, 2, 3
--- (you may need to adjust IDs depending on your DB state)
-
--- User has completed COMP SCI 1010
+-- Completed Courses
 INSERT INTO UserCourses (user_id, course_id, completion_date, grade)
 VALUES (1, 1, '2024-11-30', 'HD');
 
--- User has completed COMP SCI 1013
 INSERT INTO UserCourses (user_id, course_id, completion_date, grade)
 VALUES (1, 2, '2025-06-15', 'D');
 
--- User wants to take COMP SCI 1014
+-- Wishlist
 INSERT INTO Wishlist (user_id, course_id, added_at)
 VALUES (1, 3, NOW());
 
--- Ratings (user reviewed courses they completed)
+-- Ratings
 INSERT INTO Ratings (user_id, course_id, rating, review)
 VALUES
 (1, 1, 5, 'Amazing course! Really sharpened my problem-solving skills.'),
