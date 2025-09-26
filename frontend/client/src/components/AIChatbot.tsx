@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, Bot, User, Sparkles } from "lucide-react";
+import axios from "axios";
+import { API } from "../../constants";
 
 export interface ChatMessage {
   id: string;
@@ -49,6 +51,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
     }
   }, [messages]);
 
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -56,7 +59,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
       id: Date.now().toString(),
       content: inputMessage,
       isBot: false,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -64,57 +67,31 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
     setIsLoading(true);
 
     try {
-      if (onSendMessage) {
-        const botResponse = await onSendMessage(inputMessage);
-        setMessages(prev => [...prev, botResponse]);
-      } else {
-        // Mock response for demo
-        setTimeout(() => {
-          const mockResponse: ChatMessage = {
-            id: (Date.now() + 1).toString(),
-            content: generateMockResponse(inputMessage),
-            isBot: true,
-            timestamp: new Date(),
-            courses: inputMessage.toLowerCase().includes('data science') ? [
-              {
-                id: '1',
-                code: 'CS 180',
-                name: 'Introduction to Data Science',
-                rating: 4.3,
-                reason: 'Perfect foundation for data science with Python programming'
-              },
-              {
-                id: '2', 
-                code: 'STAT 200',
-                name: 'Statistical Methods',
-                rating: 4.1,
-                reason: 'Essential statistics background for data analysis'
-              }
-            ] : undefined
-          };
-          setMessages(prev => [...prev, mockResponse]);
-          setIsLoading(false);
-        }, 1000);
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
+      // POST to your backend API
+      const response = await axios.post(`${API}ai/prompt`, { value: inputMessage });
+
+      const botMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        content: response.data, // backend returns full text
+        isBot: true,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, botMessage]);
       setIsLoading(false);
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setIsLoading(false);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 2).toString(),
+        content: "Sorry, something went wrong. Please try again.",
+        isBot: true,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
     }
   };
 
-  const generateMockResponse = (input: string): string => {
-    const lowerInput = input.toLowerCase();
-    
-    if (lowerInput.includes('data science')) {
-      return "Great choice! Data Science is a rapidly growing field. Based on your interest, I'd recommend starting with the courses below. They'll give you a solid foundation in programming and statistics, which are essential for data science.";
-    } else if (lowerInput.includes('transfer')) {
-      return "I can help you with credit transfers! To provide the best guidance, I'll need to know: 1) What courses have you completed? 2) Which institution are you transferring to? 3) What's your target program? This information will help me check equivalencies and requirements.";
-    } else if (lowerInput.includes('prerequisite')) {
-      return "I'd be happy to help you check prerequisites! Which course are you interested in taking? I can review the requirements and suggest any preparatory courses you might need.";
-    } else {
-      return "That's an interesting question! I'm here to help with course recommendations, prerequisites, credit transfers, and academic planning. Could you tell me more about what you're looking to study or any specific academic goals you have?";
-    }
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
