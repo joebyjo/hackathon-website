@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
-require('dotenv').config({ quiet: true });
+require('dotenv').config({ path: __dirname + '/../.env' });
+
 
 const { DB_HOST, DB_USER, DB_PASS, DB_NAME } = process.env;
 

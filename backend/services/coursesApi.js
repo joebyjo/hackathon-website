@@ -37,7 +37,6 @@ async function fetchCourseDetails(course_id, term, year = 2025) {
     if (rows.length === 0) return null;
 
     const courseDetails = { ...rows[0] };
-    delete courseDetails.CRITICAL_DATES; // Remove CRITICAL_DATES
 
     return courseDetails;
   } catch (error) {
