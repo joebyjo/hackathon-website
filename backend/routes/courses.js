@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const db = require('../services/db');
 const {
   fetchSubjects,
   fetchCourses,
@@ -21,17 +22,48 @@ router.get("/subjects", async (req, res) => {
 
 // GET /api/courses?subject=COMP+SCI&year=2025
 router.get("/", async (req, res) => {
-  const subject = req.query.subject || "COMP SCI";
-  const year = parseInt(req.query.year, 10) || 2025;
+  const subject = req.query.subject || null; // optional
+  const year = parseInt(req.query.year, 10) || null; // optional, depends if you have a year column
 
   try {
-    const courses = await fetchCourses(subject, year);
-    res.json({ success: true, data: courses });
+    let sql = `
+      SELECT 
+        title, 
+        course_code, 
+        difficulty_rating, 
+        syllabus, 
+        units
+      FROM Courses
+    `;
+    const params = [];
+
+    // filter by subject if provided
+    if (subject) {
+      sql += " WHERE subject = ?";
+      params.push(subject);
+    }
+
+    // filter by year if you have a year column in the table
+    if (year) {
+      sql += subject ? " AND " : " WHERE ";
+      sql += "YEAR(term_descr) = ?"; // adjust depending on how you store the year
+      params.push(year);
+    }
+
+    const [rows] = await db.query(sql, params);
+
+    res.json({
+      data: rows
+    });
   } catch (error) {
-    console.error("Error in /courses:", error.message);
-    res.status(500).json({ success: false, error: "Failed to fetch courses" });
+    console.error("Error in GET /api/courses:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch courses"
+    });
   }
 });
+
 
 /**
  * GET /api/courses/:id?term=...&year=...
