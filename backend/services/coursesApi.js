@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 async function fetchSubjects(year = 2025) {
   const url = `https://courseplanner-api.adelaide.edu.au/api/course-planner-query/v1/?target=/system/SUBJECTS_BY_YEAR/queryx&virtual=Y&year=${year}`;
@@ -46,6 +46,12 @@ async function fetchCourseDetails(course_id, term, year = 2025) {
   }
 }
 
+module.exports = { 
+  fetchSubjects, 
+  fetchCourses, 
+  fetchCourseDetails
+};
+
 // (async () => {
 //   // const subjects = await fetchSubjects();
 //   // console.log(`Total subjects fetched: ${subjects.length}`);
@@ -61,3 +67,4 @@ async function fetchCourseDetails(course_id, term, year = 2025) {
 //     }
 //   }
 // })();
+
