@@ -33,21 +33,43 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /api/courses/:id/:term?year=2025
+/**
+ * GET /api/courses/:id?term=...&year=...
+ * Returns course details by course_id, optionally filtered by term/year
+ */
 router.get("/:id", async (req, res) => {
-  const courseId = req.params.id;
-  const term = req.params.term;
-  const year = parseInt(req.query.year, 10) || 2025;
+  const courseId = parseInt(req.params.id, 10);
+  const { term, year } = req.query; // optional query params
+
+  if (isNaN(courseId)) {
+    return res.status(400).json({ message: "Invalid course ID" });
+  }
 
   try {
-    const details = await fetchCourseDetails(courseId, term, year);
-    if (!details) {
-      return res.status(404).json({ success: false, error: "Course not found" });
+    let sql = "SELECT * FROM Courses WHERE course_id = ?";
+    const params = [courseId];
+
+    if (term) {
+      sql += " AND term_descr = ?";
+      params.push(term);
     }
-    res.json({ success: true, data: details });
-  } catch (error) {
-    console.error("Error in /course/:id/:term:", error.message);
-    res.status(500).json({ success: false, error: "Failed to fetch course details" });
+
+    // if you have a year column, you can filter it as well
+    if (year) {
+      sql += " AND YEAR(term_descr) = ?"; // adjust if you store year differently
+      params.push(year);
+    }
+
+    const [rows] = await db.query(sql, params);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    return res.json(rows[0]);
+  } catch (err) {
+    console.error("DB error:", err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
