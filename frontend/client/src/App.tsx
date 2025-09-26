@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import { Switch, Route, useLocation } from "wouter";
+=======
+import { Switch, Route } from "wouter";
+>>>>>>> refs/remotes/origin/main
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+<<<<<<< HEAD
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 
@@ -21,12 +26,34 @@ function Router({ onAIClick }: { onAIClick: () => void }) {
       <Route path="/my-courses" component={Profile} />
       <Route path="/profile" component={Profile} />
       <Route path="/discussions" component={Discussions} />
+=======
+import { useEffect } from "react";
+
+// Import pages
+import LandingPage from "@/pages/LandingPage";
+import ExploreCourses from "@/pages/ExploreCourses";
+import AIAdvisor from "@/pages/AIAdvisor";
+import MyCourses from "@/pages/MyCourses";
+import SavedPlan from "@/pages/SavedPlan";
+import NotFound from "@/pages/NotFound";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={LandingPage} />
+      <Route path="/courses" component={ExploreCourses} />
+      <Route path="/ai-advisor" component={AIAdvisor} />
+      <Route path="/my-courses" component={MyCourses} />
+      <Route path="/saved-plan" component={SavedPlan} />
+      {/* Fallback to 404 */}
+>>>>>>> refs/remotes/origin/main
       <Route component={NotFound} />
     </Switch>
   );
 }
 
 function App() {
+<<<<<<< HEAD
   const [, setLocation] = useLocation();
   const [showAIChat, setShowAIChat] = useState(false);
 
@@ -53,10 +80,20 @@ function App() {
     console.log("User logged out");
     // TODO: Implement actual logout logic
   };
+=======
+  // Initialize theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+>>>>>>> refs/remotes/origin/main
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+<<<<<<< HEAD
         <div className="min-h-screen bg-background">
           <Navigation 
             onSearchClick={handleSearchClick}
@@ -87,6 +124,10 @@ function App() {
           </main>
         </div>
         <Toaster />
+=======
+        <Toaster />
+        <Router />
+>>>>>>> refs/remotes/origin/main
       </TooltipProvider>
     </QueryClientProvider>
   );

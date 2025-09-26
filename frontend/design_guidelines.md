@@ -1,91 +1,103 @@
-# Course Recommender & Rating Website Design Guidelines
+# SmartCourse Advisor Design Guidelines
 
 ## Design Approach
-**Design System Approach**: Using a clean, utility-focused design inspired by educational platforms like Canvas and modern course platforms like Coursera. The interface prioritizes information density, readability, and efficient navigation for academic content.
+**Reference-Based Approach** inspired by modern educational platforms like Notion, Linear, and Coursera. This utility-focused application prioritizes clarity, efficiency, and student-centered design while maintaining visual appeal for engagement.
 
-**Design Principles**:
-- Information clarity and academic professionalism
-- Efficient course discovery and comparison
-- Community-driven trust through ratings and reviews
-- AI-powered personalization without overwhelming the interface
+## Core Design Principles
+- **Student-First Design**: Clean, approachable interface that reduces cognitive load
+- **Information Hierarchy**: Clear visual distinction between course data, ratings, and recommendations
+- **Trust & Credibility**: Professional appearance that instills confidence in AI recommendations
 
-## Core Design Elements
+## Color Palette
+**Primary Colors:**
+- Brand Primary: 219 94% 68% (vibrant blue for trust and education)
+- Dark Mode Primary: 219 84% 78%
 
-### A. Color Palette
-**Primary Colors**: 
-- Deep blue (220 85% 25%) for primary actions and University branding
-- Light blue (220 60% 95%) for subtle backgrounds
+**Supporting Colors:**
+- Success (ratings): 142 76% 36% (green for positive feedback)
+- Warning (difficulty): 38 92% 50% (amber for moderate difficulty)
+- Error (prerequisites): 0 72% 51% (red for warnings)
+- Neutral Gray: 220 9% 46% (for secondary text and borders)
 
-**Secondary Colors**:
-- Neutral grays (220 10% 95%, 220 15% 20%) for text and borders
-- Success green (142 76% 36%) for positive ratings
-- Warning amber (43 96% 56%) for moderate ratings
-- Error red (0 84% 60%) for critical information
+**Background Treatments:**
+- Light mode: Clean white with subtle gray (210 40% 98%)
+- Dark mode: Rich charcoal (222 84% 5%) with lighter panels (217 32% 17%)
 
-**Dark Mode**: Deep navy backgrounds (220 30% 8%) with light text (220 20% 95%)
+## Typography
+**Font Stack:** Inter from Google Fonts
+- Headings: Inter 600-700 (semibold to bold)
+- Body text: Inter 400-500 (regular to medium)
+- Course codes/technical: Inter 500 (medium, slightly smaller)
+- AI chat: Inter 400 (conversational tone)
 
-### B. Typography
-**Primary Font**: Inter from Google Fonts for excellent readability
-**Sizes**: 
-- Headers: text-2xl to text-4xl (bold)
-- Body: text-base (regular)
-- Captions: text-sm (medium)
+## Layout System
+**Spacing Units:** Tailwind units of 2, 4, 6, and 8
+- Micro spacing: p-2, gap-2 (8px)
+- Standard spacing: p-4, m-4 (16px) 
+- Section spacing: p-6, my-6 (24px)
+- Major spacing: p-8, mb-8 (32px)
 
-### C. Layout System
-**Spacing Units**: Consistent use of Tailwind units 2, 4, 6, 8, 12, and 16
-- Cards: p-6, gap-4
-- Sections: py-12, px-4
-- Components: m-2, p-4
+## Component Library
 
-### D. Component Library
+**Navigation:**
+- Fixed top navigation with subtle shadow
+- Clean horizontal layout with active state indicators
+- Mobile: Hamburger menu with slide-out drawer
 
-**Navigation**: 
-- Clean horizontal navbar with University logo
-- Sidebar navigation for course categories and filters
-- Breadcrumb navigation for course hierarchy
+**Course Cards:**
+- Clean white/dark cards with subtle shadows
+- Star ratings prominently displayed
+- Tag pills with rounded corners and muted colors
+- Hover states with gentle elevation
 
-**Course Cards**:
-- Compact cards showing course code, title, rating stars, and quick stats
-- Hover states revealing course description preview
-- Color-coded difficulty indicators
+**Search & Forms:**
+- Rounded input fields with focus states
+- Dropdown suggestions with smooth animations
+- Form validation with inline feedback
 
-**Rating System**:
-- 5-star visual rating with half-star precision
-- Rating distribution bars
-- Review cards with student avatars and course completion status
+**AI Chat Interface:**
+- Conversational bubble design
+- Distinct styling for bot vs user messages
+- Input area with send button and typing indicators
 
-**AI Chat Interface**:
-- Floating chat button in bottom-right
-- Clean chat bubble design with course suggestion cards
-- Quick suggestion chips for common queries
+**Modals & Overlays:**
+- Course detail modals with smooth transitions
+- Backdrop blur effect
+- Scrollable content areas with custom scrollbars
 
-**Forms**:
-- Clean input fields with floating labels
-- Multi-step course review forms
-- Advanced search filters with clear categorization
+## Landing Page Design
 
-**Data Displays**:
-- Course prerequisite trees
-- Progress tracking dashboards
-- Recommendation grids with reasoning explanations
+**Hero Section:**
+- Single viewport height with centered content
+- Bold headline: "Smarter Course Choices. Powered by Students + AI."
+- Subtle gradient background (219 94% 68% to 219 94% 58%)
+- Two prominent CTA buttons with contrasting styles
 
-**Overlays**:
-- Course detail modals with tabbed content
-- AI recommendation explanations
-- Student profile overlays
+**Additional Sections:**
+1. **Features Overview** (3 columns): Course ratings, AI recommendations, credit transfers
+2. **Social Proof**: Student testimonials with course success stories
+3. **Getting Started**: Simple 3-step process visualization
 
-### E. Animations
-Minimal and purposeful:
-- Smooth transitions for rating interactions
-- Gentle hover effects on course cards
-- Loading states for AI recommendations
+**Visual Elements:**
+- Minimalist illustrations of students and course materials
+- Subtle geometric patterns in background
+- No large hero image - focus on typography and clean layout
 
 ## Images
-No large hero image needed. Focus on:
-- University of Adelaide logo in navigation
-- Student avatar placeholders for reviews
-- Course category icons using Heroicons
-- Rating star icons and progress indicators
-- Small thumbnail images for course categories if available
+No large hero images required. Use:
+- Small illustrative icons for features (students, AI, books)
+- Profile avatars for testimonials (placeholder circles with initials)
+- Course thumbnail placeholders (rectangular with subject icons)
 
-This design prioritizes academic professionalism while maintaining modern usability standards for effective course discovery and community engagement.
+## Responsive Behavior
+- Desktop: Multi-column layouts, expanded course cards
+- Tablet: Adapted grid systems, collapsible sidebars
+- Mobile: Single column, bottom navigation for key actions, swipe gestures for course cards
+
+## Accessibility
+- Consistent dark mode across all components including form inputs
+- High contrast ratios for text and interactive elements
+- Screen reader friendly course rating systems
+- Keyboard navigation for all interactive elements
+
+This design system creates a professional, student-friendly platform that balances functionality with visual appeal, ensuring students can efficiently discover and plan their courses with confidence.
