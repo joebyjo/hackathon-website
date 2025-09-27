@@ -60,7 +60,7 @@ router.get("/saved-courses", async (req, res) => {
 
     
 
-    res.json(data);
+    res.json(rows);
   } catch (error) {
     console.error("Error fetching saved courses:", error.message);
     res.status(500).json({ success: false, error: "Failed to fetch saved courses" });
