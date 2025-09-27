@@ -1,3 +1,4 @@
+var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -7,6 +8,7 @@ require('dotenv').config({ quiet: true });
 
 var coursesRouter = require('./routes/courses');
 var aiRouter = require('./routes/ai');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -27,6 +29,7 @@ app.use(express.static(
 
 app.use('/api/courses', coursesRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/users', usersRouter);
 
 // serve all routes to react
 app.get('*', (req, res) => {
