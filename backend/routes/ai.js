@@ -10,8 +10,8 @@ router.post("/prompt", async (req, res) => {
       "https://core-api.pickaxe.co/pickaxe/sse",
       {
         formId: "GYLF46V8DE",
-        responseId: "PT25Y1HAVVDAHX5",
-        studioUserId: "USER02O8TXLA40BIB0O",
+        responseId: "BSNYRGWS1UWHNHN",
+        studioUserId: "USERPLXXMOZCZDL27SO",
         value,
       },
       {

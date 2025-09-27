@@ -1,163 +1,142 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import CourseSearch, { type SearchFilters } from "@/components/CourseSearch";
 import CourseCard, { type Course } from "@/components/CourseCard";
 import CourseDetailsModal, { type CourseDetails, type CourseReview } from "@/components/CourseDetailsModal";
+import axios from "axios";
+import { API } from "../../constants" 
 
-// Mock data - TODO: replace with real API calls
-const mockCourses: Course[] = [
-  {
-    id: '1',
-    name: 'Introduction to Computer Science',
-    code: 'CS 101',
-    description: 'A comprehensive introduction to computer science fundamentals including programming concepts, data structures, and algorithmic thinking.',
-    averageRating: 4.5,
-    reviewCount: 142,
-    units: 3,
-    difficulty: 'Beginner',
-    tags: ['Programming', 'Logic', 'Problem Solving', 'Great for Beginners'],
-    department: 'Computer Science'
-  },
-  {
-    id: '2',
-    name: 'Calculus II',
-    code: 'MATH 200',
-    description: 'Advanced calculus topics including integration techniques, sequences, series, and multivariable calculus foundations.',
-    averageRating: 3.8,
-    reviewCount: 89,
-    units: 4,
-    difficulty: 'Intermediate',
-    tags: ['Math Intensive', 'Challenging', 'Good for STEM'],
-    department: 'Mathematics'
-  },
-  {
-    id: '3',
-    name: 'General Physics',
-    code: 'PHYS 150',
-    description: 'Classical mechanics, waves, thermodynamics, and electricity with laboratory component.',
-    averageRating: 4.2,
-    reviewCount: 76,
-    units: 4,
-    difficulty: 'Intermediate',
-    tags: ['Lab Work', 'Math Heavy', 'Practical Applications'],
-    department: 'Physics'
-  },
-  {
-    id: '4',
-    name: 'Data Structures and Algorithms',
-    code: 'CS 250',
-    description: 'Study of fundamental data structures and algorithms with emphasis on implementation and analysis.',
-    averageRating: 4.7,
-    reviewCount: 203,
-    units: 3,
-    difficulty: 'Advanced',
-    tags: ['Programming', 'Logic', 'Career Important', 'Challenging'],
-    department: 'Computer Science'
-  },
-  {
-    id: '5',
-    name: 'World History',
-    code: 'HIST 201',
-    description: 'Survey of world civilizations from ancient times to the modern era, focusing on cultural and social developments.',
-    averageRating: 4.1,
-    reviewCount: 54,
-    units: 3,
-    difficulty: 'Beginner',
-    tags: ['Reading Heavy', 'Interesting Content', 'Easy A'],
-    department: 'History'
-  },
-  {
-    id: '6',
-    name: 'Organic Chemistry',
-    code: 'CHEM 300',
-    description: 'Structure, properties, and reactions of organic compounds with laboratory synthesis experience.',
-    averageRating: 3.2,
-    reviewCount: 67,
-    units: 4,
-    difficulty: 'Advanced',
-    tags: ['Very Difficult', 'Lab Intensive', 'Pre-Med Required', 'Heavy Workload'],
-    department: 'Chemistry'
-  }
-];
-
-const mockCourseDetails: Record<string, CourseDetails> = {
-  '1': {
-    id: '1',
-    name: 'Introduction to Computer Science',
-    code: 'CS 101',
-    description: 'A comprehensive introduction to computer science fundamentals including programming concepts, data structures, algorithms, and computational thinking. Students will learn problem-solving skills and programming techniques using Python.',
-    acad_career_descr: 'Undergraduate',
-    term_descr: 'Fall 2024',
-    campus: 'Main Campus',
-    subject: 'Computer Science',
-    units: 3,
-    eftls: '0.125',
-    prerequisite: 'High school mathematics or equivalent',
-    co_requisite: 'None',
-    assumed_knowledge: 'Basic algebra and logical thinking',
-    incompatible: 'CS 100, COMP 101',
-    assessment: 'Programming assignments (40%), Midterm exam (25%), Final exam (35%)',
-    syllabus: 'Week 1-2: Introduction to programming, Week 3-4: Variables and data types, Week 5-6: Control structures, Week 7-8: Functions, Week 9-10: Data structures, Week 11-12: Algorithms, Week 13-14: Final project',
-    department: 'School of Computer Science',
-    difficulty_rating: 3,
-    averageRating: 4.5,
-    reviewCount: 142,
-    tags: ['Programming', 'Logic', 'Problem Solving', 'Great for Beginners', 'Python'],
-    reviews: [
-      {
-        id: '1',
-        studentName: 'Sarah Chen',
-        rating: 5,
-        comment: 'Excellent introduction to programming! The professor explains concepts clearly.',
-        tags: ['Great Lecturer', 'Clear Instructions', 'Would Recommend'],
-        semester: 'Fall 2023',
-        helpful: 12,
-        timestamp: new Date('2023-12-15')
-      }
-    ]
-  }
-};
 
 export default function ExploreCourses() {
-  const [searchResults, setSearchResults] = useState<Course[]>(mockCourses);
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<CourseDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSearch = (query: string, filters: SearchFilters) => {
-    console.log('Searching for:', query, filters);
-    // TODO: Implement real search logic
-    let filtered = mockCourses;
+
+    // fectch all the components:
+    useEffect(() => {
+      const fetchAll = async () => {
+        try {
+          const resp = await axios.get(`${API}/courses`);
+          const rows = resp.data?.data ?? resp.data ?? [];
+          const courses: Course[] = rows.map((r: any) => ({
+            id: String(r.course_id ?? r.id ?? r.course_code ?? Math.random().toString()),
+            name: r.title ?? r.name ?? "",
+            code: r.course_code ?? r.code ?? "",
+            description: r.syllabus ?? r.description ?? "",
+            averageRating: Number(r.averageRating ?? r.avg_rating ?? 0),
+            reviewCount: Number(r.reviewCount ?? 0),
+            units: Number(r.units ?? 0),
+            difficulty: typeof r.difficulty === "string" ? r.difficulty : (r.difficulty_rating ? (r.difficulty_rating >= 4 ? "Advanced" : r.difficulty_rating >= 2 ? "Intermediate" : "Beginner") : "Unknown"),
+            tags: Array.isArray(r.tags) ? r.tags : [],
+            department: r.subject ?? r.department ?? "Unknown",
+          }));
+          setSearchResults(courses);
+        } catch (err) {
+          console.error("Failed to fetch all courses:", err);
+        }
+      };
+
+      fetchAll();
+    }, []);
+
+  const handleSearch = async (query: string, filters: SearchFilters) => {
+  console.log("Searching for:", query, filters);
+
+  try {
+    // Build params object for axios. If departments array exists, send as subject params.
+    // build URLSearchParams so subjects are sent as repeated params: ?subject=A&subject=B
+    const params = new URLSearchParams();
+    if (query && query.trim()) params.append('q', query.trim());
+    if (filters.departments && filters.departments.length > 0) {
+      filters.departments.forEach(dept => params.append('subject', dept));
+    }
+
+    const resp = await axios.get(`${API}/courses/search?${params.toString()}`);
+
+    // backend returns { success: true, data: rows } in your route — fall back if not wrapped
+    const rows = resp.data?.data ?? resp.data ?? [];
     
-    if (query.trim()) {
-      filtered = filtered.filter(course => 
-        course.name.toLowerCase().includes(query.toLowerCase()) ||
-        course.code.toLowerCase().includes(query.toLowerCase()) ||
-        course.description.toLowerCase().includes(query.toLowerCase())
-      );
-    }
+    // map backend rows -> Course shape (light mapping)
+    const courses: Course[] = rows.map((r: any) => ({
+      id: String(r.course_id ?? r.id ?? r.course_code ?? Math.random().toString()),
+      name: r.title ?? r.name ?? "",
+      code: r.course_code ?? r.code ?? "",
+      description: r.syllabus ?? r.description ?? "",
+      averageRating: Number(r.averageRating ?? r.avg_rating ?? 0),
+      reviewCount: Number(r.reviewCount ?? 0),
+      units: Number(r.units ?? 0),
+      difficulty: typeof r.difficulty === "string" ? r.difficulty : (r.difficulty_rating ? (r.difficulty_rating >= 4 ? "Advanced" : r.difficulty_rating >= 2 ? "Intermediate" : "Beginner") : "Unknown"),
+      tags: Array.isArray(r.tags) ? r.tags : [],
+      department: r.subject ?? r.department ?? "Unknown",
+    }));
 
-    if (filters.departments.length > 0) {
-      filtered = filtered.filter(course => 
-        filters.departments.includes(course.department)
-      );
-    }
-
-    if (filters.difficulty.length > 0) {
-      filtered = filtered.filter(course => 
-        filters.difficulty.includes(course.difficulty)
-      );
+    // client-side difficulty filter (backend doesn't currently accept difficulty filters)
+    let filtered = courses;
+    if (filters.difficulty && filters.difficulty.length > 0) {
+      filtered = filtered.filter(c => filters.difficulty.includes(c.difficulty));
     }
 
     setSearchResults(filtered);
-  };
+  } catch (err) {
+    console.error("Search failed:", err);
+    // fallback: clear results or keep previous state
+    setSearchResults([]);
+  }
+};
 
-  const handleViewDetails = (courseId: string) => {
-    const courseDetails = mockCourseDetails[courseId];
-    if (courseDetails) {
-      setSelectedCourse(courseDetails);
-      setIsModalOpen(true);
+  const handleViewDetails = async (courseId: string) => {
+  try {
+    const resp = await axios.get(`${API}/courses/${courseId}`);
+    // your backend returns row object (not wrapped), but be safe:
+    const row = resp.data?.data ?? resp.data ?? null;
+    if (!row) {
+      console.error("No course details returned");
+      return;
     }
-  };
+
+    // minimal mapping to CourseDetails shape expected by your modal
+    const details: CourseDetails = {
+      id: String(row.course_id ?? row.id ?? row.course_code ?? courseId),
+      name: row.title ?? row.name ?? "",
+      code: row.course_code ?? row.code ?? "",
+      description: row.syllabus ?? row.description ?? "",
+      acad_career_descr: row.acad_career_descr ?? "",
+      term_descr: row.term_descr ?? "",
+      campus: row.campus ?? "",
+      subject: row.subject ?? row.department ?? "",
+      units: Number(row.units ?? 0),
+      eftls: row.eftls ?? "",
+      prerequisite: row.prerequisite ?? row.prereqs ?? "",
+      co_requisite: row.co_requisite ?? row.coreqs ?? "",
+      assumed_knowledge: row.assumed_knowledge ?? "",
+      incompatible: row.incompatible ?? "",
+      assessment: row.assessment ?? "",
+      syllabus: row.syllabus ?? "",
+      department: row.department ?? "",
+      difficulty_rating: Number(row.difficulty_rating ?? 0),
+      averageRating: Number(row.averageRating ?? 0),
+      reviewCount: Number(row.reviewCount ?? 0),
+      tags: Array.isArray(row.tags) ? row.tags : [],
+      reviews: Array.isArray(row.reviews) ? row.reviews.map((r: any) => ({
+        id: String(r.id ?? Math.random().toString()),
+        studentName: r.studentName ?? r.name ?? "Anonymous",
+        rating: Number(r.rating ?? 0),
+        comment: r.comment ?? r.text ?? "",
+        tags: Array.isArray(r.tags) ? r.tags : [],
+        semester: r.semester ?? "",
+        helpful: Number(r.helpful ?? 0),
+        timestamp: r.timestamp ? new Date(r.timestamp) : new Date(),
+      })) : []
+    };
+
+    setSelectedCourse(details);
+    setIsModalOpen(true);
+  } catch (err) {
+    console.error("Failed to fetch course details:", err);
+  }
+};
+
 
   const handleAddToWishlist = (courseId: string) => {
     console.log('Added to wishlist:', courseId);

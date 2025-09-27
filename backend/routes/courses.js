@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
   try {
     let sql = `
       SELECT 
+        course_id,
         title, 
         course_code, 
         difficulty_rating, 
@@ -100,6 +101,7 @@ router.get("/search", async (req, res) => {
     let sql = `
       SELECT 
         course_code, 
+        course_id,
         title, 
         difficulty_rating, 
         syllabus, 
