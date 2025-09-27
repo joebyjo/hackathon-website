@@ -52,7 +52,7 @@ export default function ExploreCourses() {
       filters.departments.forEach(dept => params.append('subject', dept));
     }
 
-    const resp = await axios.get(`${API}/courses/search?${params.toString()}`);
+    const resp = await axios.get(`${API}/courses/search?${params.toString()}&limit=100`);
 
     // backend returns { success: true, data: rows } in your route — fall back if not wrapped
     const rows = resp.data?.data ?? resp.data ?? [];
