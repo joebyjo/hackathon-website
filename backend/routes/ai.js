@@ -9,9 +9,9 @@ router.post("/prompt", async (req, res) => {
     const response = await axios.post(
       "https://core-api.pickaxe.co/pickaxe/sse",
       {
-        formId: "GYLF46V8DE",
-        responseId: "BSNYRGWS1UWHNHN",
-        studioUserId: "USERPLXXMOZCZDL27SO",
+        formId: "W1LT4EX7FF",
+        responseId: "1NH2VC3A3EGUQYS",
+        studioUserId: "USER02O8TXLA40BIB0O",
         value,
       },
       {
@@ -44,7 +44,7 @@ router.post("/prompt", async (req, res) => {
     });
 
     response.data.on("end", () => {
-      res.send(fullText.slice(0, -6));
+      res.send(removeCharacter(fullText.slice(0, -6), "*"));
     });
 
   } catch (err) {
@@ -54,5 +54,13 @@ router.post("/prompt", async (req, res) => {
     }
   }
 });
+
+function removeCharacter(str, charToRemove) {
+  // Escape special regex characters so the RegExp doesn't break
+  const escapedChar = charToRemove.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return str.replace(new RegExp(escapedChar, 'g'), '');
+}
+
+
 
 module.exports = router;

@@ -156,7 +156,7 @@ export default function CourseDetailsModal({
                   <div className="flex items-center justify-center mb-1" data-testid="course-rating-stars">
                     {renderStars(course.averageRating)}
                   </div>
-                  <div className="text-xs text-muted-foreground">{course.reviewCount} reviews</div>
+                  <div className="text-xs text-muted-foreground">3 reviews</div>
                 </div>
                 <Separator orientation="vertical" className="h-16" />
                 <div className="text-center">
