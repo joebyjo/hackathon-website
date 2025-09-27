@@ -37,7 +37,8 @@ router.get("/", async (req, res) => {
         course_id,
         title, 
         course_code, 
-        difficulty_rating, 
+        difficulty_rating,
+        average_rating,
         syllabus, 
         units
       FROM Courses
@@ -103,7 +104,8 @@ router.get("/search", async (req, res) => {
         course_code, 
         course_id,
         title, 
-        difficulty_rating, 
+        difficulty_rating,
+        average_rating,
         syllabus, 
         units
       FROM Courses

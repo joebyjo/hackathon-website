@@ -214,7 +214,7 @@ export default function LandingPage() {
               <span className="text-xl font-semibold text-foreground">SmartCourse</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              © 2024 SmartCourse Advisor. Empowering students to make smarter course choices.
+              © 2025 SmartCourse Advisor. Empowering students to make smarter course choices.
             </p>
           </div>
         </div>
