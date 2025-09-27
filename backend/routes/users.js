@@ -5,6 +5,94 @@ const db = require('../services/db');
 // Temporary hardcoded user
 const userId = 1;
 
+
+router.post("/saved-courses", async (req, res) => {
+  const { course_id } = req.body;
+
+  if (!course_id) {
+    return res.status(400).json({ success: false, error: "course_id required" });
+  }
+
+  try {
+    await db.query(
+      `INSERT INTO UserCourses (user_id, course_id)
+       VALUES (?, ?)
+       ON DUPLICATE KEY UPDATE course_id = course_id`,
+      [userId, course_id]
+    );
+
+    res.json({ success: true, message: "Course saved successfully" });
+  } catch (error) {
+    console.error("Error saving course:", error.message);
+    res.status(500).json({ success: false, error: "Failed to save course" });
+  }
+});
+
+/**
+ * Get all saved courses for the user
+ * GET /api/users/saved-courses
+ */
+router.get("/saved-courses", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT 
+        c.course_id AS id,
+        c.course_code AS code,
+        c.title AS name,
+        c.description,
+        c.units,
+        c.average_rating AS averageRating,
+        COUNT(r.rating_id) AS reviewCount,
+        difficulty_rating,
+        c.prerequisite AS prerequisites,
+        c.contact_hours AS workloadHours,
+        c.term_descr AS semester,
+        c.syllabus AS reason
+      FROM UserCourses uc
+      JOIN Courses c ON uc.course_id = c.course_id
+      LEFT JOIN Ratings r ON r.course_id = c.course_id
+      WHERE uc.user_id = ?
+      GROUP BY c.course_id
+      `,
+      [userId]
+    );
+
+    
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching saved courses:", error.message);
+    res.status(500).json({ success: false, error: "Failed to fetch saved courses" });
+  }
+});
+
+
+// Unsave a course
+router.delete("/saved-courses/:course_id", async (req, res) => {
+  const { course_id } = req.params;
+
+  try {
+    const [result] = await db.query(
+      `DELETE FROM UserCourses 
+       WHERE user_id = ? AND course_id = ?`,
+      [userId, course_id] // <- use your constant userId for now
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, error: "Course not found in saved list" });
+    }
+
+    res.json({ success: true, message: "Course removed from saved list" });
+  } catch (error) {
+    console.error("Error unsaving course:", error.message);
+    res.status(500).json({ success: false, error: "Failed to unsave course" });
+  }
+});
+
+
+
+
 /**
  * Save a course (wishlist)
  * POST /api/users/save-course
@@ -49,6 +137,34 @@ router.get("/my-courses", async (req, res) => {
   } catch (error) {
     console.error("Error fetching saved courses:", error.message);
     res.status(500).json({ success: false, error: "Failed to fetch saved courses" });
+  }
+});
+
+router.delete("/my-courses/:course_id", async (req, res) => {
+  const { course_id } = req.params;
+
+  if (!course_id) {
+    return res.status(400).json({ success: false, error: "course_id required" });
+  }
+
+  try {
+    const [result] = await db.query(
+      `DELETE FROM SavedCourses WHERE user_id = ? AND course_id = ?`,
+      [userId, course_id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Course not found in saved list" });
+    }
+
+    res.json({ success: true, message: "Course removed from saved list" });
+  } catch (error) {
+    console.error("Error deleting saved course:", error.message);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to delete saved course" });
   }
 });
 

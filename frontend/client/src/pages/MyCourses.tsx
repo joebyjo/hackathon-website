@@ -136,7 +136,7 @@ export default function MyCourses() {
 
   const handleDeleteCourse = async (courseId: string) => {
     try {
-      await axios.delete(`${API}/users/add-courses/${courseId}`);
+      await axios.delete(`${API}/users/my-courses/${courseId}`);
       await fetchCourses(); // refresh list after deletion
     } catch (err) {
       console.error("Error deleting course:", err);
@@ -188,7 +188,7 @@ export default function MyCourses() {
                     <Label htmlFor="code">Course Code</Label>
                     <Input
                       id="code"
-                      placeholder="CS 101"
+                      placeholder="COMP SCI 2201"
                       value={newCourse.code}
                       onChange={(e) => setNewCourse({...newCourse, code: e.target.value})}
                       data-testid="input-course-code"

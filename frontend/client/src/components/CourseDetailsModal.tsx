@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { API } from "../../constants";
 import {
   Dialog,
   DialogContent,
@@ -105,7 +107,7 @@ export default function CourseDetailsModal({
     "Lots of Reading", "Group Projects", "Clear Instructions", "Helpful TA",
     "Would Recommend", "Skip if Possible"
   ];
-
+  
   const handleSubmitReview = () => {
     if (reviewRating > 0) {
       onSubmitReview?.(course.id, reviewRating, reviewComment, reviewTags);
@@ -115,6 +117,7 @@ export default function CourseDetailsModal({
       setReviewTags([]);
     }
   };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
