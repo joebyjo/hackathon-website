@@ -138,10 +138,15 @@ export default function ExploreCourses() {
 };
 
 
-  const handleAddToWishlist = (courseId: string) => {
-    console.log('Added to wishlist:', courseId);
-    // TODO: Implement wishlist functionality
-  };
+  const handleAddToWishlist = async (courseId: string) => {
+  try {
+    await axios.post(`${API}/users/saved-courses`, { course_id: courseId });
+    console.log("Added to wishlist:", courseId);
+  } catch (error) {
+    console.error("Failed to add to wishlist:", error);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-background">

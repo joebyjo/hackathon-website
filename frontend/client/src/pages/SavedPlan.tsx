@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { API } from "../../constants"; 
 import { 
   Heart, 
   Star, 
@@ -36,71 +38,69 @@ export interface SavedCourse {
   reason?: string; // Why AI recommended this course
 }
 
-const mockSavedCourses: SavedCourse[] = [
-  {
-    id: '1',
-    code: 'CS 2103',
-    name: 'Data Structures and Algorithms',
-    description: 'Study of fundamental data structures and algorithms with emphasis on implementation and analysis.',
-    units: 3,
-    averageRating: 4.7,
-    reviewCount: 203,
-    difficulty: 'Advanced',
-    prerequisites: 'COMP SCI 1103, COMP SCI 1203, COMP SCI 2103, COMP SCI 2202 or COMP SCI 2202B',
-    workloadHours: 12,
-    tags: ['Programming', 'Logic', 'Career Important', 'Challenging'],
-    semester: 'Semester 2',
-    reason: 'Perfect next step after CS 101, essential for software engineering roles'
-  },
-  {
-    id: '2',
-    code: 'STAT 2107',
-    name: 'Statistics & Numerical Methods II',
-    description: 'Introduction to statistical concepts including probability, hypothesis testing, and regression analysis.',
-    units: 3,
-    averageRating: 4.1,
-    reviewCount: 156,
-    difficulty: 'Intermediate',
-    prerequisites: 'MATH 1012',
-    workloadHours: 8,
-    tags: ['Math Heavy', 'Practical Applications', 'Good for Data Science'],
-    semester: 'Semester 2',
-    reason: 'Complements your interest in data science, builds on your math background'
-  },
-  {
-    id: '3',
-    code: 'CS 1500',
-    name: ' Introductory Data Science',
-    description: 'Overview of data science techniques including data visualization, machine learning, and statistical analysis.',
-    units: 3,
-    averageRating: 4.3,
-    reviewCount: 124,
-    difficulty: 'Intermediate',
-    prerequisites: 'no prerequisites',
-    workloadHours: 10,
-    tags: ['Python', 'Machine Learning', 'Practical Projects', 'Hot Topic'],
-    semester: 'Semester 1',
-    reason: 'Aligns with your data science career goals, requires STAT 200 as prerequisite'
-  }
-];
-
 export default function SavedPlan() {
-  const [savedCourses, setSavedCourses] = useState<SavedCourse[]>(mockSavedCourses);
+  const [savedCourses, setSavedCourses] = useState<SavedCourse[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
 
-  const handleRemoveCourse = (courseId: string) => {
-    setSavedCourses(courses => courses.filter(course => course.id !== courseId));
-    setSelectedCourses(selected => selected.filter(id => id !== courseId));
-  };
 
-  const handleSelectCourse = (courseId: string) => {
-    setSelectedCourses(prev => 
-      prev.includes(courseId) 
-        ? prev.filter(id => id !== courseId)
-        : prev.length < 3 ? [...prev, courseId] : prev
-    );
-  };
+  
+  const fetchSavedCourses = async () => {
+  try {
+    const res = await axios.get(`${API}/users/saved-courses`);
+    // console.log(res.data);
+    const courses = (res.data || []).map(course => ({
+      id: course.id,
+      code: course.code,
+      name: course.name,
+      description: "",
+      units: Number(course.units),
+      averageRating: course.averageRating,
+      reviewCount: course.reviewCount,
+      difficulty: course.difficulty_rating, // map from backend
+      prerequisites: course.prerequisites,
+      workloadHours: course.workloadHours,
+      semester: course.semester,
+      reason: course.reason, // map from syllabus
+      tags: generateTags(course) // optional function to generate tags
+    }));
+
+    // console.log(courses);
+
+    setSavedCourses(courses);
+  } catch (err) {
+    console.error("Failed to load saved courses:", err);
+  }
+};
+
+// Example tag generation (can be customized)
+const generateTags = (course) => {
+  const tags = [];
+  if (course.units >= 3) tags.push('Challenging');
+  if (course.averageRating >= 4.5) tags.push('Highly Rated');
+  if (course.difficulty_rating === 'Advanced') tags.push('Career Important');
+  // add more rules as needed
+  return tags;
+};
+
+useEffect(() => {
+  fetchSavedCourses();
+}, []);
+
+
+  const handleRemoveCourse = async (courseId: string) => {
+  try {
+    await axios.delete(`${API}/users/saved-courses/${courseId}`);
+    await fetchSavedCourses(); 
+    setSelectedCourses(selected => selected.filter(id => id !== courseId));
+  } catch (error) {
+    console.error("Failed to unsave course:", error);
+  }
+};
+
+
+
+  const handleSelectCourse = (courseId: string) => {};
 
   const compareSelectedCourses = () => {
     setIsCompareModalOpen(true);
@@ -186,7 +186,7 @@ export default function SavedPlan() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-primary">
-                  {Math.round(savedCourses.reduce((sum, course) => sum + course.workloadHours, 0) / savedCourses.length)}h
+                  0
                 </div>
                 <p className="text-xs text-muted-foreground">Avg Workload</p>
               </CardContent>
@@ -259,7 +259,7 @@ export default function SavedPlan() {
                         <div className="flex items-center space-x-1">
                           <span className="text-muted-foreground">Workload:</span>
                           <span className={getWorkloadColor(course.workloadHours)}>
-                            {course.workloadHours}h/week
+                            {course.workloadHours}
                           </span>
                         </div>
                         {course.prerequisites && (

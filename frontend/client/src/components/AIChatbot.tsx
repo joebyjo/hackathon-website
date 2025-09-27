@@ -183,7 +183,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
         <div className="flex w-full gap-2">
           <Input
             ref={inputRef}
-            placeholder="Ask about courses, prerequisites, or credit transfers..."
+            placeholder="Ask about courses, prerequisites or Academic pathway planning..."
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}

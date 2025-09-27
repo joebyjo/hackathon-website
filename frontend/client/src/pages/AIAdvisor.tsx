@@ -24,7 +24,7 @@ export default function AIAdvisor() {
             
             <AIChatbot 
               className="h-[600px]"
-              initialMessage="Hello! I'm your AI Course Advisor. I can help you with course recommendations, prerequisites, credit transfers, and academic planning. What would you like to explore today?"
+              initialMessage="Hello! I'm your AI Course Advisor. I can help you with course recommendations, prerequisites, and academic planning. What would you like to explore today?"
             />
           </div>
 
@@ -47,13 +47,13 @@ export default function AIAdvisor() {
                 <div>
                   <h4 className="font-medium mb-1">Check Prerequisites</h4>
                   <p className="text-muted-foreground">
-                    "What do I need to take before CS 250?"
+                    "Which courses should I take to meet all prerequisites for Machine Learning?"
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-medium mb-1">Credit Transfer</h4>
+                  <h4 className="font-medium mb-1">Upskill</h4>
                   <p className="text-muted-foreground">
-                    "Can I transfer my calculus credits from community college?"
+                    "Which electives help me develop communication and teamwork skills?"
                   </p>
                 </div>
               </CardContent>
@@ -77,7 +77,7 @@ export default function AIAdvisor() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span>Credit transfer guidance</span>
+                  <span>Pathway & skills guidance</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
