@@ -20,10 +20,16 @@ router.get("/subjects", async (req, res) => {
   }
 });
 
-// GET /api/courses?subject=COMP+SCI&year=2025
+// GET /api/courses?subject=MATHS&subject=COMP+SCI&year=2025&limit=10
 router.get("/", async (req, res) => {
-  const subject = req.query.subject || null; // optional
-  const year = parseInt(req.query.year, 10) || null; // optional, depends if you have a year column
+  let subjects = req.query.subject || null; 
+  const year = parseInt(req.query.year, 10) || null; 
+  const limit = parseInt(req.query.limit, 10) || null; 
+
+  // normalize subjects → always an array if provided
+  if (subjects && !Array.isArray(subjects)) {
+    subjects = [subjects];
+  }
 
   try {
     let sql = `
@@ -36,23 +42,36 @@ router.get("/", async (req, res) => {
       FROM Courses
     `;
     const params = [];
+    const conditions = [];
 
-    // filter by subject if provided
-    if (subject) {
-      sql += " WHERE subject = ?";
-      params.push(subject);
+    // multiple subjects support
+    if (subjects && subjects.length > 0) {
+      const placeholders = subjects.map(() => "?").join(", ");
+      conditions.push(`subject IN (${placeholders})`);
+      params.push(...subjects);
     }
 
-    // filter by year if you have a year column in the table
+    // filter by year if you have a year column (adjust as needed)
     if (year) {
-      sql += subject ? " AND " : " WHERE ";
-      sql += "YEAR(term_descr) = ?"; // adjust depending on how you store the year
+      conditions.push("YEAR(term_descr) = ?"); 
       params.push(year);
+    }
+
+    // append WHERE if conditions exist
+    if (conditions.length > 0) {
+      sql += " WHERE " + conditions.join(" AND ");
+    }
+
+    // apply limit if provided
+    if (limit) {
+      sql += " LIMIT ?";
+      params.push(limit);
     }
 
     const [rows] = await db.query(sql, params);
 
     res.json({
+      success: true,
       data: rows
     });
   } catch (error) {
@@ -63,6 +82,7 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
 
 
 /**
@@ -104,5 +124,42 @@ router.get("/:id", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+// GET /api/courses/search?q=COMP+SCI+1010
+router.get("/search", async (req, res) => {
+  const q = req.query.q;
+
+  if (!q) {
+    return res.status(400).json({ success: false, error: "Query parameter 'q' is required" });
+  }
+
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT 
+        course_code, 
+        title, 
+        difficulty_rating, 
+        syllabus, 
+        units
+      FROM Courses
+      WHERE course_code LIKE ? OR title LIKE ?
+      `,
+      [`%${q}%`, `%${q}%`]
+    );
+
+    if (rows.length === 0) {
+      return res.json({ success: true, data: [], message: "No courses found" });
+    }
+
+    res.json({ success: true, data: rows });
+  } catch (error) {
+    console.error("Error in /courses/search:", error.message);
+    res.status(500).json({ success: false, error: "Failed to search courses" });
+  }
+});
+
+
 
 module.exports = router;
