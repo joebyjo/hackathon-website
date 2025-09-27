@@ -9,9 +9,9 @@ router.post("/prompt", async (req, res) => {
     const response = await axios.post(
       "https://core-api.pickaxe.co/pickaxe/sse",
       {
-        formId: "W1LT4EX7FF",
-        responseId: "PT25Y1HAVVDAHX5",
-        studioUserId: "USER02O8TXLA40BIB0O",
+        formId: "GYLF46V8DE",
+        responseId: "BSNYRGWS1UWHNHN",
+        studioUserId: "USERPLXXMOZCZDL27SO",
         value,
       },
       {
@@ -44,7 +44,7 @@ router.post("/prompt", async (req, res) => {
     });
 
     response.data.on("end", () => {
-      res.send(fullText);
+      res.send(fullText.slice(0, -6));
     });
 
   } catch (err) {

@@ -20,7 +20,7 @@ router.get("/subjects", async (req, res) => {
   }
 });
 
-// GET /api/courses?subject=MATHS&subject=COMP+SCI&year=2025&limit=10
+// GET /api/courses?subject=MATHS&subject=COMP SCI&year=2025&limit=10
 router.get("/", async (req, res) => {
   let subjects = req.query.subject || null; 
   const year = parseInt(req.query.year, 10) || null; 
@@ -34,6 +34,7 @@ router.get("/", async (req, res) => {
   try {
     let sql = `
       SELECT 
+        course_id,
         title, 
         course_code, 
         difficulty_rating, 
@@ -100,6 +101,7 @@ router.get("/search", async (req, res) => {
     let sql = `
       SELECT 
         course_code, 
+        course_id,
         title, 
         difficulty_rating, 
         syllabus, 
