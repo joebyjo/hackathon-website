@@ -36,7 +36,7 @@ router.post("/save-course", async (req, res) => {
 router.get("/saved-courses", async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT c.course_id, c.course_code, c.title, c.subject, s.added_at
+      `SELECT c.course_id, c.course_code, c.title, c,units, c.subject, c.term_descr, s.added_at
        FROM SavedCourses s
        JOIN Courses c ON s.course_id = c.course_id
        WHERE s.user_id = ?`,
