@@ -1,1 +1,1 @@
-export const API = "/api";
+export const API = "https://hackathon-website-cbxw.onrender.com/api";
