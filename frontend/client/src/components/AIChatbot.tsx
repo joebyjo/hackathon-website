@@ -101,7 +101,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
   };
 
   return (
-    <Card className={`flex flex-col h-96 ${className}`} data-testid="chat-container">
+    <Card className={`flex flex-col max-h-screen h-full ${className}`} data-testid="chat-container">
       <CardHeader className="pb-3 border-b border-border">
         <div className="flex items-center space-x-3">
           <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-full">
@@ -114,7 +114,7 @@ export default function AIChatbot({ onSendMessage, className, initialMessage }: 
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 p-0">
+      <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full px-4" ref={scrollAreaRef}>
           <div className="py-4 space-y-4">
             {messages.map((message) => (
