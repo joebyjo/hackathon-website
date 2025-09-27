@@ -11,17 +11,18 @@ const userId = 1;
  * Body: { course_id }
  */
 router.post("/save-course", async (req, res) => {
-  const { course_id } = req.body;
-  if (!course_id) {
+  const { course_code } = req.body;
+  if (!course_code) {
     return res.status(400).json({ success: false, error: "course_id required" });
   }
 
   try {
     await db.query(
-      `INSERT INTO SavedCourses (user_id, course_id) VALUES (?, ?)
+      `INSERT INTO SavedCourses (user_id, course_id) VALUES (?, (SELECT course_id from Courses where course_code='?'))
        ON DUPLICATE KEY UPDATE added_at = CURRENT_TIMESTAMP`,
-      [userId, course_id]
+      [userId, course_code]
     );
+
     res.json({ success: true, message: "Course saved successfully" });
   } catch (error) {
     console.error("Error saving course:", error.message);
@@ -36,12 +37,14 @@ router.post("/save-course", async (req, res) => {
 router.get("/saved-courses", async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT c.course_id, c.course_code, c.title, c,units, c.subject, c.term_descr, s.added_at
+      `SELECT c.course_id, c.course_code, c.title, c.units, c.subject, c.term_descr, s.added_at, c.average_rating
        FROM SavedCourses s
        JOIN Courses c ON s.course_id = c.course_id
        WHERE s.user_id = ?`,
       [userId]
     );
+    
+    console.log(rows);
     res.json({ success: true, data: rows });
   } catch (error) {
     console.error("Error fetching saved courses:", error.message);

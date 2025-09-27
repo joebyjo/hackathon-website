@@ -115,7 +115,7 @@ export default function MyCourses() {
    const handleAddCourse = async () => {
     if (newCourse.code && newCourse.name) {
       try {
-        await axios.post(`${API}/users/saved-courses`, newCourse);
+        await axios.post(`${API}/users/save-course`, newCourse.code);
         await fetchCourses(); // refresh list from backend
         setNewCourse({
           code: "",
