@@ -14,11 +14,11 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">15,000+</div>
+              <div className="text-3xl font-bold text-primary">25,000+</div>
               <p className="text-muted-foreground">Course Reviews</p>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">5,200+</div>
+              <div className="text-3xl font-bold text-primary">15,200+</div>
               <p className="text-muted-foreground">Active Students</p>
             </div>
             <div className="space-y-2">
@@ -26,8 +26,8 @@ export default function LandingPage() {
               <p className="text-muted-foreground">Satisfaction Rate</p>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">450+</div>
-              <p className="text-muted-foreground">Universities</p>
+              <div className="text-3xl font-bold text-primary">3,500+</div>
+              <p className="text-muted-foreground">Courses</p>
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <p className="font-medium text-sm">Alex Chen</p>
-                    <p className="text-xs text-muted-foreground">CS Major, Stanford</p>
+                    <p className="text-xs text-muted-foreground">CS Major, 3rd Year</p>
                   </div>
                 </div>
               </CardContent>
@@ -171,7 +171,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <p className="font-medium text-sm">Sarah Martinez</p>
-                    <p className="text-xs text-muted-foreground">Business Major, UC Berkeley</p>
+                    <p className="text-xs text-muted-foreground">Business Major, 1st Year</p>
                   </div>
                 </div>
               </CardContent>
@@ -194,7 +194,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <p className="font-medium text-sm">Mike Thompson</p>
-                    <p className="text-xs text-muted-foreground">Engineering Major, MIT</p>
+                    <p className="text-xs text-muted-foreground">Engineering Major, 3rd Year</p>
                   </div>
                 </div>
               </CardContent>

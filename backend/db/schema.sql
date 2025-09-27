@@ -19,31 +19,7 @@ CREATE TABLE Users (
 -- =======================
 -- COURSES TABLE
 -- =======================
-CREATE TABLE Courses (
-    course_id INT PRIMARY KEY,
-    course_code VARCHAR(50),  -- e.g. "COMP SCI 1010"
-    title VARCHAR(255),
-    description TEXT,
-    acad_career_descr VARCHAR(100),   -- Undergraduate / Graduate
-    term_descr VARCHAR(100),          -- Semester 1 / 2
-    campus VARCHAR(100),
-    country VARCHAR(50),
-    subject VARCHAR(50),              -- e.g. COMP SCI
-    class_nbr INT,
-    session_cd VARCHAR(10),
-    units DECIMAL(4,2),
-    eftls DECIMAL(6,3),
-    contact_hours VARCHAR(255),
-    prerequisite TEXT,
-    co_requisite TEXT,
-    assumed_knowledge TEXT,
-    incompatible TEXT,
-    assessment TEXT,
-    syllabus TEXT,
-    department VARCHAR(100),          -- For classification
-    difficulty_rating INT,
-    CONSTRAINT chk_difficulty CHECK (difficulty_rating BETWEEN 1 AND 10 OR difficulty_rating IS NULL)
-);
+ 
 
 -- =======================
 -- RATINGS TABLE (junction)
@@ -77,11 +53,11 @@ CREATE TABLE UserCourses (
 
 
 CREATE TABLE SavedCourses (
-    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
+    saved_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (user_id, course_id),
-    CONSTRAINT fk_wishlist_user FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_wishlist_course FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE
+    CONSTRAINT fk_savedcourses_user FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_savedcourses_course FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE
 );
