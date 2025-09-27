@@ -19,7 +19,7 @@ export default function HeroSection({ onExploreClick, onAiAdvisorClick }: HeroSe
           </h1>
           
           <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto" data-testid="text-hero-subheading">
-            Rate your past courses, explore peer reviews, and let our AI bot guide your next step — including credit transfers.
+            Rate your past courses, explore peer reviews, and let our AI bot guide your next step.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -73,8 +73,8 @@ export default function HeroSection({ onExploreClick, onAiAdvisorClick }: HeroSe
               <div className="w-12 h-12 bg-white/10 rounded-lg mx-auto flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-blue-100" />
               </div>
-              <h3 className="text-lg font-semibold">Credit Transfer</h3>
-              <p className="text-blue-100 text-sm">Smart guidance on transferring credits between institutions</p>
+              <h3 className="text-lg font-semibold">Career Pathway Suggestions</h3>
+              <p className="text-blue-100 text-sm">AI-powered course recommendations aligned with your career goals. Clear guidance on prerequisites and the pathways they unlock</p>
             </div>
           </div>
         </div>
