@@ -83,6 +83,14 @@ export default function Navigation({ className }: NavigationProps) {
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              data-testid="button-profile-pic"
+            >
+              <img src="media/profilePic.svg" alt="" />
+            </Button>
             
             <Button
               variant="ghost"
