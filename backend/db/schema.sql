@@ -69,8 +69,6 @@ CREATE TABLE UserCourses (
     user_course_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
-    completion_date DATE,
-    grade VARCHAR(10),                 -- Optional, e.g. "A", "HD"
     UNIQUE (user_id, course_id),
     CONSTRAINT fk_usercourses_user FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     CONSTRAINT fk_usercourses_course FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE
