@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, BookOpen, Calendar, Star, Trash2 } from "lucide-react";
+import axios from "axios";
+import { API } from "../../constants"
+
 
 export interface MyCourse {
   id: string;
@@ -34,54 +37,49 @@ export interface MyCourse {
 }
 
 export default function MyCourses() {
-  const [courses, setCourses] = useState<MyCourse[]>([
-    {
-      id: '1',
-      code: 'CS 101',
-      name: 'Introduction to Computer Science',
-      units: 3,
-      grade: 'A',
-      semester: 'Fall 2023',
-      status: 'completed',
-      rating: 5
-    },
-    {
-      id: '2',
-      code: 'MATH 200',
-      name: 'Calculus II',
-      units: 4,
-      grade: 'B+',
-      semester: 'Fall 2023',
-      status: 'completed',
-      rating: 4
-    },
-    {
-      id: '3',
-      code: 'CS 250',
-      name: 'Data Structures and Algorithms',
-      units: 3,
-      semester: 'Spring 2024',
-      status: 'current'
-    },
-    {
-      id: '4',
-      code: 'ENGL 100',
-      name: 'Composition',
-      units: 3,
-      semester: 'Spring 2024',
-      status: 'current'
-    }
-  ]);
-
+  const [courses, setCourses] = useState<MyCourse[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newCourse, setNewCourse] = useState({
-    code: '',
-    name: '',
+    code: "",
+    name: "",
     units: 3,
-    grade: '',
-    semester: '',
-    status: 'current' as 'current' | 'completed'
+    grade: "",
+    semester: "",
+    status: "current" as "current" | "completed",
   });
+
+  // map API row to MyCourse object
+  function mapToMyCourse(row: any): MyCourse {
+    return {
+      id: String(row.course_id ?? row.id ?? row.course_code ?? Date.now()),
+      code: row.course_code ?? row.code ?? "",
+      name: row.title ?? row.name ?? "",
+      units: Number(row.units ?? 0),
+      grade: row.grade ?? undefined,
+      semester: row.term_descr ?? row.semester ?? "",
+      status: row.status ?? "current",
+      rating: row.averageRating ? Math.round(row.averageRating) : undefined,
+    };
+  }
+
+  const fetchCourses = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API}/users/saved-courses`);
+      const data = res.data;
+      const mapped = Array.isArray(data) ? data.map(mapToMyCourse) : [];
+      setCourses(mapped);
+      return mapped; // return so handleAddCourse can use it
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+      return [];
+    }
+  }, []);
+
+  
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
 
   const currentCourses = courses.filter(course => course.status === 'current');
   const completedCourses = courses.filter(course => course.status === 'completed');
@@ -114,28 +112,35 @@ export default function MyCourses() {
     return totalUnits > 0 ? totalPoints / totalUnits : 0;
   }
 
-  const handleAddCourse = () => {
+   const handleAddCourse = async () => {
     if (newCourse.code && newCourse.name) {
-      const course: MyCourse = {
-        id: Date.now().toString(),
-        ...newCourse
-      };
-      setCourses([...courses, course]);
-      setNewCourse({
-        code: '',
-        name: '',
-        units: 3,
-        grade: '',
-        semester: '',
-        status: 'current'
-      });
-      setIsAddDialogOpen(false);
+      try {
+        await axios.post(`${API}/users/saved-courses`, newCourse);
+        await fetchCourses(); // refresh list from backend
+        setNewCourse({
+          code: "",
+          name: "",
+          units: 3,
+          grade: "",
+          semester: "",
+          status: "current",
+        });
+        setIsAddDialogOpen(false);
+      } catch (err) {
+        console.error("Error adding course:", err);
+      }
     }
   };
 
-  const handleDeleteCourse = (courseId: string) => {
-    setCourses(courses.filter(course => course.id !== courseId));
+  const handleDeleteCourse = async (courseId: string) => {
+    try {
+      await axios.delete(`${API}/users/saved-courses/${courseId}`);
+      await fetchCourses(); // refresh list after deletion
+    } catch (err) {
+      console.error("Error deleting course:", err);
+    }
   };
+
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
