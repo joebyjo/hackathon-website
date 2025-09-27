@@ -10,9 +10,9 @@ const userId = 1;
  * POST /api/users/save-course
  * Body: { course_id }
  */
-router.post("/save-course", async (req, res) => {
-  const { course_code } = req.body;
-  if (!course_code) {
+router.post("/my-course", async (req, res) => {
+  const { course_id } = req.body;
+  if (!course_id) {
     return res.status(400).json({ success: false, error: "course_id required" });
   }
 
@@ -49,6 +49,34 @@ router.get("/saved-courses", async (req, res) => {
   } catch (error) {
     console.error("Error fetching saved courses:", error.message);
     res.status(500).json({ success: false, error: "Failed to fetch saved courses" });
+  }
+});
+
+router.delete("/saved-courses/:course_id", async (req, res) => {
+  const { course_id } = req.params;
+
+  if (!course_id) {
+    return res.status(400).json({ success: false, error: "course_id required" });
+  }
+
+  try {
+    const [result] = await db.query(
+      `DELETE FROM SavedCourses WHERE user_id = ? AND course_id = ?`,
+      [userId, course_id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Course not found in saved list" });
+    }
+
+    res.json({ success: true, message: "Course removed from saved list" });
+  } catch (error) {
+    console.error("Error deleting saved course:", error.message);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to delete saved course" });
   }
 });
 
