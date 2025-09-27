@@ -18,7 +18,7 @@ router.post("/save-course", async (req, res) => {
 
   try {
     await db.query(
-      `INSERT INTO SavedCourses (user_id, course_id) VALUES (?, (SELECT course_id from Courses where course_code='?'))
+      `INSERT INTO SavedCourses (user_id, course_id) VALUES (?, (SELECT course_id from Courses where course_code=?))
        ON DUPLICATE KEY UPDATE added_at = CURRENT_TIMESTAMP`,
       [userId, course_code]
     );
@@ -44,8 +44,8 @@ router.get("/saved-courses", async (req, res) => {
       [userId]
     );
     
-    console.log(rows);
-    res.json({ success: true, data: rows });
+    // console.log(rows);
+    res.json(rows);
   } catch (error) {
     console.error("Error fetching saved courses:", error.message);
     res.status(500).json({ success: false, error: "Failed to fetch saved courses" });

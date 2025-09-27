@@ -58,7 +58,7 @@ export default function MyCourses() {
       grade: row.grade ?? undefined,
       semester: row.term_descr ?? row.semester ?? "",
       status: row.status ?? "current",
-      rating: row.averageRating ? Math.round(row.averageRating) : undefined,
+      rating: row.average_rating ? Math.round(row.average_rating) : 0,
     };
   }
 
@@ -66,6 +66,7 @@ export default function MyCourses() {
     try {
       const res = await axios.get(`${API}/users/saved-courses`);
       const data = res.data;
+      // console.log(data);
       const mapped = Array.isArray(data) ? data.map(mapToMyCourse) : [];
       setCourses(mapped);
       return mapped; // return so handleAddCourse can use it
@@ -115,7 +116,8 @@ export default function MyCourses() {
    const handleAddCourse = async () => {
     if (newCourse.code && newCourse.name) {
       try {
-        await axios.post(`${API}/users/save-course`, newCourse.code);
+        console.log(newCourse.code);
+        await axios.post(`${API}/users/save-course`, {course_code: newCourse.code});
         await fetchCourses(); // refresh list from backend
         setNewCourse({
           code: "",
