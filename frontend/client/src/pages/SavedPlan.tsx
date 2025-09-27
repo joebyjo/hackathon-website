@@ -39,7 +39,7 @@ export interface SavedCourse {
 const mockSavedCourses: SavedCourse[] = [
   {
     id: '1',
-    code: 'CS 2103',
+    code: 'COMP SCI 2103',
     name: 'Data Structures and Algorithms',
     description: 'Study of fundamental data structures and algorithms with emphasis on implementation and analysis.',
     units: 3,
@@ -69,7 +69,7 @@ const mockSavedCourses: SavedCourse[] = [
   },
   {
     id: '3',
-    code: 'CS 1500',
+    code: 'COMP SCI 1500',
     name: ' Introductory Data Science',
     description: 'Overview of data science techniques including data visualization, machine learning, and statistical analysis.',
     units: 3,
