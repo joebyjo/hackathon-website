@@ -17,7 +17,7 @@ export default function ExploreCourses() {
     useEffect(() => {
       const fetchAll = async () => {
         try {
-          const resp = await axios.get(`${API}/courses`);
+          const resp = await axios.get(`${API}/courses?limit=100`);
           const rows = resp.data?.data ?? resp.data ?? [];
           const courses: Course[] = rows.map((r: any) => ({
             id: String(r.course_id ?? r.id ?? r.course_code ?? Math.random().toString()),
