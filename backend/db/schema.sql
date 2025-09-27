@@ -75,10 +75,8 @@ CREATE TABLE UserCourses (
     CONSTRAINT fk_usercourses_course FOREIGN KEY (course_id) REFERENCES Courses(course_id) ON DELETE CASCADE
 );
 
--- =======================
--- WISHLIST TABLE (planned courses)
--- =======================
-CREATE TABLE Wishlist (
+
+CREATE TABLE SavedCourses (
     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     course_id INT NOT NULL,
