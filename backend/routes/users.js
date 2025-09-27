@@ -10,9 +10,9 @@ const userId = 1;
  * POST /api/users/save-course
  * Body: { course_id }
  */
-router.post("/my-course", async (req, res) => {
-  const { course_id } = req.body;
-  if (!course_id) {
+router.post("/add-course", async (req, res) => {
+  const { course_code } = req.body;
+  if (!course_code) {
     return res.status(400).json({ success: false, error: "course_id required" });
   }
 
@@ -34,7 +34,7 @@ router.post("/my-course", async (req, res) => {
  * Get all saved courses
  * GET /api/users/saved-courses
  */
-router.get("/saved-courses", async (req, res) => {
+router.get("/my-courses", async (req, res) => {
   try {
     const [rows] = await db.query(
       `SELECT c.course_id, c.course_code, c.title, c.units, c.subject, c.term_descr, s.added_at, c.average_rating

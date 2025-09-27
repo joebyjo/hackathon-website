@@ -64,7 +64,7 @@ export default function MyCourses() {
 
   const fetchCourses = useCallback(async () => {
     try {
-      const res = await axios.get(`${API}/users/saved-courses`);
+      const res = await axios.get(`${API}/users/my-courses`);
       const data = res.data;
       // console.log(data);
       const mapped = Array.isArray(data) ? data.map(mapToMyCourse) : [];
@@ -117,7 +117,7 @@ export default function MyCourses() {
     if (newCourse.code && newCourse.name) {
       try {
         console.log(newCourse.code);
-        await axios.post(`${API}/users/save-course`, {course_code: newCourse.code});
+        await axios.post(`${API}/users/add-course`, {course_code: newCourse.code});
         await fetchCourses(); // refresh list from backend
         setNewCourse({
           code: "",
@@ -136,7 +136,7 @@ export default function MyCourses() {
 
   const handleDeleteCourse = async (courseId: string) => {
     try {
-      await axios.delete(`${API}/users/saved-courses/${courseId}`);
+      await axios.delete(`${API}/users/add-courses/${courseId}`);
       await fetchCourses(); // refresh list after deletion
     } catch (err) {
       console.error("Error deleting course:", err);
