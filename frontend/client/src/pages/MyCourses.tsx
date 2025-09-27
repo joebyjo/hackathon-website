@@ -136,7 +136,7 @@ export default function MyCourses() {
 
   const handleDeleteCourse = async (courseId: string) => {
     try {
-      await axios.delete(`${API}/users/add-courses/${courseId}`);
+      await axios.delete(`${API}/users/my-courses/${courseId}`);
       await fetchCourses(); // refresh list after deletion
     } catch (err) {
       console.error("Error deleting course:", err);

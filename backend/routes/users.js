@@ -52,17 +52,17 @@ router.get("/my-courses", async (req, res) => {
   }
 });
 
-router.delete("/my-courses", async (req, res) => {
-  const { course_code } = req.body;
+router.delete("/my-courses/:course_id", async (req, res) => {
+  const { course_id } = req.params;
 
-  if (!course_code) {
+  if (!course_id) {
     return res.status(400).json({ success: false, error: "course_id required" });
   }
 
   try {
     const [result] = await db.query(
-      `DELETE FROM SavedCourses WHERE user_id = ? AND course_id = (SELECT course_id from Courses where course_code=?)`,
-      [userId, course_code]
+      `DELETE FROM SavedCourses WHERE user_id = ? AND course_id = ?`,
+      [userId, course_id]
     );
 
     if (result.affectedRows === 0) {
